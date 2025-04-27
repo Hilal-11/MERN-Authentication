@@ -2,18 +2,19 @@
 import {Model} from '../models/UserModel.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-export const regester = async () => {
+export const regester = async (req , res) => {
     // SIMPLE VALIDATION
     const { username , email , password } = req.body;
-    if(!username || !email || password) {
-        return resizeBy.status(400).json( {
+
+    if(!username || !email || !password) {
+        return res.status(400).json( {
             success: false,
             message: "Missing details"
         })
     }
     try{
         // CHECK EXISTING USER 
-        const userExists = await Model.findOne({ email })
+        const userExists = await Model.findOne({ email: email })
         if(userExists) {
             return res.status(400).json({
                 success: false,
@@ -21,11 +22,11 @@ export const regester = async () => {
             })
         }
          // HASH THE PASSWORD 
-         const salt_round = bcrypy.genSalt(10)
+         const salt_round = bcrypt.genSalt(10)
          const hash_password = await bcrypt.hash(password , salt_round);
 
          
-        const user = Model.create({
+        const user = await Model.create({
             username,
             email,
             password: hash_password,
@@ -53,7 +54,8 @@ export const regester = async () => {
         // })
 
         return res.json({
-            success: true
+            success: true,
+            message: "Successful regestration"
         })
 
     }catch(error){
@@ -68,7 +70,7 @@ export const regester = async () => {
 export const login = async (req , res) => {
     const { email , password } = req.body;
     if(!email || !password) {
-        return resizeBy.status(400).json( {
+        return res.status(400).json( {
             success: false,
             message: "Email and password is required"
         })
@@ -85,7 +87,7 @@ export const login = async (req , res) => {
         // COMPARE PASSWORD
         const isMatch = await bcrypt.compare(password , userExists.password)
 
-        if(!isMatch) {
+        if(!isMatch) {          
             res.status(400).json({
                 success: true,
                 message: "Invalid email and password"
