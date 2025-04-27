@@ -34,4 +34,5 @@ const userModel = mongoose.Schema({
 //     }
 // }
 
-module.exports = mongoose.model("Model" , userModel)
+export const Model = mongoose.model('Model', userModel)
+
