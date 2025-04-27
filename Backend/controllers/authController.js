@@ -45,11 +45,15 @@ export const regester = async () => {
             sameSite: process.env.NODE_ENV === 'production' ? 'none': 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         })
-        res.status(200).json({
-            success: true,
-            message: "Successfully regester thr user",
-            userId: user._id.toString(),
-            token: token,
+        // res.status(200).json({
+        //     success: true,
+        //     message: "Successfully regester thr user",
+        //     userId: user._id.toString(),
+        //     token: token,
+        // })
+
+        return res.json({
+            success: true
         })
 
     }catch(error){
@@ -63,7 +67,7 @@ export const regester = async () => {
 
 export const login = async (req , res) => {
     const { email , password } = req.body;
-    if(!email || password) {
+    if(!email || !password) {
         return resizeBy.status(400).json( {
             success: false,
             message: "Email and password is required"
@@ -103,15 +107,48 @@ export const login = async (req , res) => {
         })
 
 
-        res.status(200).json({
-            success: true,
-            message: "Successfully Login",
-            userId: userExists._id.toString(),
-            token: token,
+        // res.status(200).json({
+        //     success: true,
+        //     message: "Successfully Login",
+        //     userId: userExists._id.toString(),
+        //     token: token,
+        // })
+
+        return res.json({
+            success: true
         })
 
         
     }catch(error) {
+        res.status(400).json({
+            success: false,
+            message: "Failed to Login"
+        })
+    }
+}
 
+
+
+export const logout = async (req , res) => {
+    try{
+        
+        res.clearCookie('token' , {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none': 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        })
+
+        return res.json({
+            success: true,
+            message: "Logged Out"
+        })
+
+        
+    }catch(error) {
+        res.status(400).json({
+            success: false,
+            message: "Failed to Logout"
+        })
     }
 }
