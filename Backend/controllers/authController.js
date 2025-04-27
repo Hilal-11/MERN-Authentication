@@ -1,6 +1,6 @@
 
 import Model from '../models/UserModel'
-import bcrypy from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 export const regester = async () => {
     // SIMPLE VALIDATION
@@ -22,7 +22,7 @@ export const regester = async () => {
         }
          // HASH THE PASSWORD 
          const salt_round = bcrypy.genSalt(10)
-         const hash_password = await bcrypy.hash(password , salt_round);
+         const hash_password = await bcrypt.hash(password , salt_round);
 
          
         const user = Model.create({
@@ -70,7 +70,23 @@ export const login = async (req , res) => {
         })
     }
     try{
+        const userExists = await Model.findOne({ email });
+        if(!userExists) {
+            res.status(400).json({
+                success: true,
+                message: "Invalid email and password"
+            })
+        }
 
+        // COMPARE PASSWORD
+        const isMatch = await bcrypt.compare(password , userExists.password)
+
+        if(!isMatch) {
+            res.status(400).json({
+                success: true,
+                message: "Invalid email and password"
+            })
+        }
         
     }catch(error) {
 
