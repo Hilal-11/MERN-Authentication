@@ -2,9 +2,8 @@
 import express from 'express';
 const app = express();
 import cors from 'cors'
-import app_routes from './routes/app_routes'
+import authRouter from './routes/authRouter'
 import connectDB from './config/database'
-import bodyParser from 'cookie-parser'
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv'
 dotenv.config()
@@ -16,7 +15,7 @@ app.use(cors({
 }))
 app.use(express.json());
 app.use(cookieParser())
-app.use('/api/v1' , app_routes);
+app.use('/api/auth' , authRouter);
 
 app.get('/' , (req , res) => {
     res.send("<h1>MERN Authentication and Autherization</h1>")

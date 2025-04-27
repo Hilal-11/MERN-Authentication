@@ -6,4 +6,4 @@ authRouter.post('/regester' , regester);
 authRouter.post('/login' , login);
 authRouter.post('/logout' , logout);
 
-module.exports = router;
+module.exports = authRouter;
