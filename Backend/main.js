@@ -6,7 +6,8 @@ import app_routes from './routes/app_routes'
 import connectDB from './config/database'
 import bodyParser from 'cookie-parser'
 import cookieParser from 'cookie-parser';
-require('dotenv').config();
+import dotenv from 'dotenv'
+dotenv.config()
 const PORT = process.env.PORT;
 
 

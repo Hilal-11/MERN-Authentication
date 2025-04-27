@@ -1,5 +1,7 @@
-import mongoose, { mongo } from 'mongoose'
-
+import mongoose from 'mongoose'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+dotenv.config()
 const userModel = mongoose.Schema({
     username: { type: String, required: true},
 
@@ -14,8 +16,22 @@ const userModel = mongoose.Schema({
     isAccountVarified: { type: Boolean, default: false},
 
     resetOtp: { type: String, default: ""},
-    
+
     resetOtpExpireAt: { type: Number, default: 0},
 })
+
+// userModel.methods.generateToken = async function() {
+//     try{
+//         return jwt.sign(
+//             { userId: this._id.toString(), email: this.email} ,
+//             process.env.SIGNITURE,
+//             {
+//                 expiresIn: '5h'
+//             }
+//         )
+//     }catch(error) {
+//         console.log(error.message)
+//     }
+// }
 
 module.exports = mongoose.model("Model" , userModel)
