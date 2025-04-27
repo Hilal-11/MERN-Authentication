@@ -2,6 +2,9 @@
 import {Model} from '../models/UserModel.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import transpoater from '../config/nodemailer.js';
+import dotenv from 'dotenv'
+dotenv.config()
 export const regester = async (req , res) => {
     // SIMPLE VALIDATION
     const { username , email , password } = req.body;
@@ -46,12 +49,16 @@ export const regester = async (req , res) => {
             sameSite: process.env.NODE_ENV === 'production' ? 'none': 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         })
-        // res.status(200).json({
-        //     success: true,
-        //     message: "Successfully regester thr user",
-        //     userId: user._id.toString(),
-        //     token: token,
-        // })
+        // SEND EMAIL
+        const mail = {
+            from: process.env.SENDER_EMAIL,
+            to: email , // list of receivers
+            subject: "Welcome to Webmastry.pro", // Subject line
+            text: `welcome to webmastery.pro your account has created with email id: ${email}`, // plain text body
+            html: "<b>Hello there i am hiala , founder of <h2>Webmastery.pro</h2></b>", // html body
+        }
+
+        await transpoater.sendMail(mail);
 
         return res.json({
             success: true,
