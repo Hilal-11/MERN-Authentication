@@ -2,7 +2,7 @@
 import {Model} from '../models/UserModel.js'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import transpoater from '../config/nodemailer.js';
+import transporter from '../config/nodemailer.js';
 import dotenv from 'dotenv'
 dotenv.config()
 export const regester = async (req , res) => {
@@ -58,7 +58,12 @@ export const regester = async (req , res) => {
             html: "<b>Hello there i am hiala , founder of <h2>Webmastery.pro</h2></b>", // html body
         }
 
-        await transpoater.sendMail(mail);
+        await transporter.sendMail(mail)
+            .then(info => {
+                console.log("Mail sent successfully", info)
+            }).catch(err => {
+                console.log("Failed to sent email", err)
+            })
 
         return res.json({
             success: true,
