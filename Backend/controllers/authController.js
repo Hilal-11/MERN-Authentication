@@ -41,8 +41,12 @@ export const regester = async () => {
                 {
                     expiresIn: '7d'
                 }
-                )
+            )
 
+        res.cookie("token" , token , {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production'
+        })
         res.status(200).json({
             success: true,
             message: "Successfully regester thr user",
