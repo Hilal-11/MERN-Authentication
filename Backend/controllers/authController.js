@@ -87,6 +87,29 @@ export const login = async (req , res) => {
                 message: "Invalid email and password"
             })
         }
+
+        //  GENERATE TOKEN FOR LOGIN SUCCESSFULL
+        const token = jwt.sign({ userId: userExists._id, email: userExists.email} ,
+            process.env.SECRET_KEY,
+        {
+            expiresIn: '7d'
+        })
+
+        res.cookie('token' , token , {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none': 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        })
+
+
+        res.status(200).json({
+            success: true,
+            message: "Successfully Login",
+            userId: userExists._id.toString(),
+            token: token,
+        })
+
         
     }catch(error) {
 
