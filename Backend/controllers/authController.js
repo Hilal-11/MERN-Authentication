@@ -14,7 +14,7 @@ export const regester = async (req , res) => {
     }
     try{
         // CHECK EXISTING USER 
-        const userExists = await Model.findOne({ email: email })
+        const userExists = await Model.findOne({ email })
         if(userExists) {
             return res.status(400).json({
                 success: false,
@@ -22,8 +22,8 @@ export const regester = async (req , res) => {
             })
         }
          // HASH THE PASSWORD 
-         const salt_round = bcrypt.genSalt(10)
-         const hash_password = await bcrypt.hash(password , salt_round);
+        //  const salt_round = bcrypt.genSalt(10)
+         const hash_password = await bcrypt.hash(password , 10);
 
          
         const user = await Model.create({
@@ -32,7 +32,7 @@ export const regester = async (req , res) => {
             password: hash_password,
         })
         // GENERATE TOKEN
-        const token = jwt.sign(
+        const token = await jwt.sign(
                 { userId: user._id, email: user.email} ,
                     process.env.SECRET_KEY,
                 {
@@ -40,11 +40,11 @@ export const regester = async (req , res) => {
                 }
             )
 
-        res.cookie("token" , token , {
+        res.cookie('token' , token , {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none': 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         })
         // res.status(200).json({
         //     success: true,
@@ -95,7 +95,7 @@ export const login = async (req , res) => {
         }
 
         //  GENERATE TOKEN FOR LOGIN SUCCESSFULL
-        const token = jwt.sign({ userId: userExists._id, email: userExists.email} ,
+        const token = await jwt.sign({ userId: userExists._id, email: userExists.email} ,
             process.env.SECRET_KEY,
         {
             expiresIn: '7d'
