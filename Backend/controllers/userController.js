@@ -1,5 +1,4 @@
 import {Model} from '../models/UserModel.js'
-
 const getUserData = async ( req , res ) => {
     try{
         const { id } = req.body;
