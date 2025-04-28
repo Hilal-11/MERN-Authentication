@@ -187,7 +187,40 @@ export const sendVarifyOtp = async (req , res) => {
 
 export const varifyEmail = async (req , res) => {
     try{
-        const { userId } = req.body;
+        const { userId , otp} = req.body;
+        if(!user || !otp) {
+            return res.json({
+                success: false,
+                message: ""
+            })
+        }
+        try{
+            const user = await Model.findById({ userId })
+            if(!user) {
+                return res.json({
+                    success: false,
+                    message: "User not Found"
+                })
+            }
+            //  VARIFY THE OTP
+            if(user.varifyOtp === '' || user.varifyOtp !== otp) {
+                return res.json({ success: false, message: "Invalid OTP" })
+            }
+            // CHECK OTP EXPIRY
+            if(user.varifyOtpExpireAt < Date.now()) {
+                return res.json({ success: false, message: "OTP Expired" })
+            }
+
+            user.isAccountVarified = true;
+            user.varifyOtp = '';
+            user.varifyOtpExpireAt = 0
+
+            await user.save();
+            return res.json({ success: true , message: "Email Varified Successfully"})
+
+        }catch(err) {
+            res.json({ success: false , message: "Failed to OTP Varification"})
+        }
     }catch(error) {
         res.json({
             success: true,
