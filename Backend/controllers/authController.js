@@ -1,6 +1,6 @@
 
 import {Model} from '../models/UserModel.js'
-import bcrypt from 'bcryptjs'
+import bcrypt, { hash } from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import transporter from '../config/nodemailer.js';
 import dotenv from 'dotenv'
@@ -307,7 +307,7 @@ export const sendResetOtp = async (req  ,res) => {
 }
 
 // Reset user password
-export const resetUserPassword = async (req , res) => {
+export const resetPassword = async (req , res) => {
     const { email , otp , newPassword } = req.body;
     if(!email || !otp || !newPassword) {
         res.json({
@@ -339,9 +339,15 @@ export const resetUserPassword = async (req , res) => {
             })
         }
 
-        const hash_password = bcrypt.hash()
+        const hash_password = bcrypt.hash(newPassword , 10);
+        user.password = hash_password;
+        user.resetOtp = '';
+        user.resetOtpExpireAt = 0;
 
-        res.json({ success: true, message: error.message })
+        await user.save();
+
+        return res.json({ success: true, message: "Password has been reset successfully" })
+
     }catch(error) {
         res.json({
             success: true,
