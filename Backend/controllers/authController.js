@@ -209,7 +209,7 @@ export const varifyEmail = async (req , res) => {
             })
         }
         try{
-            const user = await Model.findById({ userId })
+            const user = await Model.findById(id)
             if(!user) {
                 return res.json({
                     success: false,
