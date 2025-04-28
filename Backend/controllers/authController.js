@@ -78,7 +78,6 @@ export const regester = async (req , res) => {
     }
 }
 
-
 export const login = async (req , res) => {
     const { email , password } = req.body;
     if(!email || !password) {
@@ -95,7 +94,6 @@ export const login = async (req , res) => {
                 message: "Invalid email and password"
             })
         }
-
         // COMPARE PASSWORD
         const isMatch = await bcrypt.compare(password , userExists.password)
 
@@ -105,34 +103,21 @@ export const login = async (req , res) => {
                 message: "Invalid email and password"
             })
         }
-
         //  GENERATE TOKEN FOR LOGIN SUCCESSFULL
         const token = await jwt.sign({ userId: userExists._id, email: userExists.email} ,
             process.env.SECRET_KEY,
         {
             expiresIn: '7d'
         })
-
         res.cookie('token' , token , {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none': 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         })
-
-
-        // res.status(200).json({
-        //     success: true,
-        //     message: "Successfully Login",
-        //     userId: userExists._id.toString(),
-        //     token: token,
-        // })
-
         return res.json({
             success: true
         })
-
-        
     }catch(error) {
         res.status(400).json({
             success: false,
@@ -141,28 +126,72 @@ export const login = async (req , res) => {
     }
 }
 
-
-
 export const logout = async (req , res) => {
     try{
-        
         res.clearCookie('token' , {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none': 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
         })
-
         return res.json({
             success: true,
             message: "Logged Out"
         })
-
-        
     }catch(error) {
         res.status(400).json({
             success: false,
             message: "Failed to Logout"
+        })
+    }
+}
+
+export const sendVarifyOtp = async (req , res) => {
+    try{
+        const { userId } = req.body;
+        const user = await Model.findById({ userId })
+
+        if(uesr.isAccountVarified) {
+            return res.json({
+                success: false,
+                message: "Account already varified"
+            })
+        }
+        // GENERATE RANDOM OTP
+        const otp = String(Math.floor(100000 + Math.random() * 900000));
+        user.varifyOtp = otp;
+        user.varifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000; // 24-hours
+
+        await user.save();
+
+        const mainOption = {
+            from: process.env.SENDER_EMAIL,
+            to: user.email , // list of receivers
+            subject: "Account Varification OTP", // Subject line
+            text: `Your OTP is ${otp} Varify your account using this OTP`, // plain text body
+        }
+        await transporter.sendMail(mainOption);
+
+        res.json({
+            success: true,
+            message: "Varification OTP sent on Email"
+        })
+
+    }catch(error) {
+        res.json({
+            success: false,
+            message: error.message,
+        })
+    }
+}
+
+export const varifyEmail = async (req , res) => {
+    try{
+        const { userId } = req.body;
+    }catch(error) {
+        res.json({
+            success: true,
+            message: error.message
         })
     }
 }
