@@ -2,8 +2,8 @@ import {Model} from '../models/UserModel.js'
 
 const getUserData = async ( req , res ) => {
     try{
-        const { userId } = req.body;
-        const user = await Model.findById(userId)
+        const { id } = req.body;
+        const user = await Model.findById(id)
         if(!user) {
             return res.json( {
                 success: false,
