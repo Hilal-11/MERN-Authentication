@@ -36,7 +36,7 @@ export const regester = async (req , res) => {
         })
         // GENERATE TOKEN
         const token = await jwt.sign(
-                { userId: user._id, email: user.email} ,
+                { id: user._id, email: user.email} ,
                     process.env.SECRET_KEY,
                 {
                     expiresIn: '7d'
@@ -104,7 +104,7 @@ export const login = async (req , res) => {
             })
         }
         //  GENERATE TOKEN FOR LOGIN SUCCESSFULL
-        const token = await jwt.sign({ userId: userExists._id, email: userExists.email} ,
+        const token = await jwt.sign({ id: userExists._id, email: userExists.email} ,
             process.env.SECRET_KEY,
         {
             expiresIn: '7d'
@@ -148,8 +148,8 @@ export const logout = async (req , res) => {
 
 export const sendVarifyOtp = async (req , res) => {
     try{
-        const { userId } = req.body;
-        const user = await Model.findById({ userId })
+        const { id } = req.body;
+        const user = await Model.findById({ id })
 
         if(uesr.isAccountVarified) {
             return res.json({
@@ -180,6 +180,7 @@ export const sendVarifyOtp = async (req , res) => {
     }catch(error) {
         res.json({
             success: false,
+            abc: "fuck",
             message: error.message,
         })
     }
@@ -187,8 +188,8 @@ export const sendVarifyOtp = async (req , res) => {
 
 export const varifyEmail = async (req , res) => {
     try{
-        const { userId , otp} = req.body;
-        if(!user || !otp) {
+        const { id , otp} = req.body;
+        if(!id || !otp) {
             return res.json({
                 success: false,
                 message: ""
