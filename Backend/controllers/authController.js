@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import transporter from '../config/nodemailer.js';
 import dotenv from 'dotenv'
 dotenv.config()
+
 export const regester = async (req , res) => {
     // SIMPLE VALIDATION
     const { username , email , password } = req.body;
@@ -235,6 +236,112 @@ export const varifyEmail = async (req , res) => {
         }catch(err) {
             res.json({ success: false , message: "Failed to OTP Varification"})
         }
+    }catch(error) {
+        res.json({
+            success: true,
+            message: error.message
+        })
+    }
+}
+
+// CHECK USER IS AUTHENTICATED OR NOT
+export const isAuthenticated = async (req , res) => {
+    try{
+        
+
+        return res.json({ success: true})
+    }catch(error) {
+        res.json({
+            success: true,
+            message: error.message
+        })
+    }
+}
+
+// SEND PASSWORD RESET OTP
+export const sendResetOtp = async (req  ,res) => {
+    const {email} = req.body;
+    if(!email){
+        res.json({
+            success: true,
+            message: "Email is required"
+        })
+    }
+    try{
+        const user = await Model.findOne({email});
+        if(!user) {
+            res.json({
+                success: true,
+                message: "user not found"
+            })
+        }
+
+        // GENERATE RANDOM OTP
+        const otp = String(Math.floor(100000 + Math.random() * 900000));
+        user.resetOtp = otp;
+        user.resetOtpExpireAt = Date.now() + 15 * 60 * 1000; // 15-minutes
+
+        await user.save();
+
+        const mailOption = {
+            from: process.env.SENDER_EMAIL,
+            to: user.email , // list of receivers
+            subject: "Password Reset OTP", // Subject line
+            text: `Your OTP for resetting the password is ${otp}.
+            use this OTP to process with resetting your password`, // plain text body
+        }
+        await transporter.sendMail(mailOption)
+            .then(info => {
+                console.log("OTP Sent on email successfully" , info)
+            }).catch(err => {
+                console.log("Faied to sent the OTP" , info)
+            })
+        return res.json({ success: true, message: "OTP send to your email" })
+
+    }catch(error) {
+        res.json({
+            success: true,
+            message: error.message
+        })
+    }
+}
+
+// Reset user password
+export const resetUserPassword = async (req , res) => {
+    const { email , otp , newPassword } = req.body;
+    if(!email || !otp || !newPassword) {
+        res.json({
+            success: false,
+            message: "Email , OTP , and new password is required"
+        })
+    }
+    try{
+
+        const user = await Model.findOne({ email })
+        if(!user) {
+            res.json({
+                success: false,
+                message: "User not found"
+            })
+        }
+
+        if(user.resetOtp === "" || user.resetOtp !== otp) {
+            res.json({
+                success: false,
+                message: "Invalid OTP"
+            })
+        }
+
+        if(user.resetOtpExpireAt < Date.now()){
+            res.json({
+                success: false,
+                message: "OTP Expired"
+            })
+        }
+
+        const hash_password = bcrypt.hash()
+
+        res.json({ success: true, message: error.message })
     }catch(error) {
         res.json({
             success: true,

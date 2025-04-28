@@ -22,7 +22,7 @@ const userAuth = async (req , res , next) => {
         
         next();
     }catch(error){
-        return res.json({ success: false , abc: "fuck" ,message: error.message });
+        return res.json({ success: false ,message: error.message });
     }
 }
 export default userAuth
