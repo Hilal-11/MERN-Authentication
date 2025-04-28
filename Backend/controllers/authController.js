@@ -149,9 +149,16 @@ export const logout = async (req , res) => {
 export const sendVarifyOtp = async (req , res) => {
     try{
         const { id } = req.body;
-        const user = await Model.findById({ id })
+        const user = await Model.findById(id)
 
-        if(uesr.isAccountVarified) {
+        if (!user) {
+            return res.json({
+                success: false,
+                message: "User not found",
+            });
+        }
+        
+        if(user.isAccountVarified) {
             return res.json({
                 success: false,
                 message: "Account already varified"
@@ -164,13 +171,19 @@ export const sendVarifyOtp = async (req , res) => {
 
         await user.save();
 
-        const mainOption = {
+        const mailOption = {
             from: process.env.SENDER_EMAIL,
             to: user.email , // list of receivers
             subject: "Account Varification OTP", // Subject line
             text: `Your OTP is ${otp} Varify your account using this OTP`, // plain text body
+            html: `<h2>Your OTP is ${otp}</h2>`
         }
-        await transporter.sendMail(mainOption);
+        await transporter.sendMail(mailOption)
+            .then(info => {
+                console.log("OTP Sent on email successfully" , info)
+            }).catch(err => {
+                console.log("Faied to sent the OTP" , info)
+            })
 
         res.json({
             success: true,

@@ -14,7 +14,8 @@ const userAuth = async (req , res , next) => {
         const decodeToken = jwt.verify(token , process.env.SECRET_KEY)
         console.log(decodeToken)
         if(decodeToken.id) {
-            req.body.id = decodeToken.id
+            req.body = req.body || {}; // Ensure req.body is defined
+            req.body.id = decodeToken.id.toString()
         }else{
             return res.json({ success: false, message : "Not Autherized Login Again"})
         }
