@@ -325,7 +325,7 @@ export const resetPassword = async (req , res) => {
             })
         }
 
-        if(user.resetOtp === "" || user.resetOtp !== otp) {
+        if(user.resetOtp === '' || user.resetOtp !== otp) {
             res.json({
                 success: false,
                 message: "Invalid OTP"
@@ -339,7 +339,7 @@ export const resetPassword = async (req , res) => {
             })
         }
 
-        const hash_password = bcrypt.hash(newPassword , 10);
+        const hash_password = await bcrypt.hash(newPassword , 10);
         user.password = hash_password;
         user.resetOtp = '';
         user.resetOtpExpireAt = 0;
