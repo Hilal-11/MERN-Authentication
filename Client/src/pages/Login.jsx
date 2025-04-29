@@ -3,12 +3,28 @@ import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
 function Login() {
   const [state , setState] = useState('Sign Up')
+
+  const [username , setUsername] = useState('')
+  const [email , setEmail] = useState('')
+  const [password , setPassword] = useState('')
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const user = {
+      username,
+      email,
+      password
+    }
+    console.log(user)
+
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen ">
       <div className="bg-white rounded-md shadow-lg p-8 w-full max-w-md">
         <h2 className="text-3xl  text-center text-gray-800 mb-0 poppins-bold">{state === 'Sign Up' ? (<span>Create Account</span>) : (<span>Login</span>)}</h2>
         <p className='poppins-light text-[13px] text-center text-violet-800 mb-8'>Create your Account</p>
-        <form>
+        <form onSubmit={ handleSubmit }>
           {/* Username Field */}
           { state === 'Sign Up' && (
             <div className="mb-8">
@@ -18,6 +34,8 @@ function Login() {
                   type="text"
                   placeholder="Username"
                   className="w-full outline-none text-gray-700"
+                  onChange={(e) => setUsername(e.target.value)}
+                  value={username}
                 />
               </div>
             </div>
@@ -31,6 +49,8 @@ function Login() {
                 type="email"
                 placeholder="Email"
                 className="w-full outline-none text-gray-700"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
               />
             </div>
           </div>
@@ -43,6 +63,8 @@ function Login() {
                 type="password"
                 placeholder="Password"
                 className="w-full outline-none text-gray-700"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
               />
             </div>
           </div>
