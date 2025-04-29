@@ -17,6 +17,11 @@ function Login() {
     }
     console.log(user)
 
+    // Clear the form after submitting
+    setUsername('')
+    setEmail('')
+    setPassword('')
+
   }
 
   return (
