@@ -17,7 +17,11 @@ function EmailVarify() {
   };
 
   const handleSubmit = () => {
-    alert(`Entered OTP: ${otp.join("")}`);
+    const convertString = otp.toString()
+    const OTP = convertString.split(',').join('')
+    console.log(OTP)
+
+    setOtp(new Array(6).fill(""))
   };
 
   return (
