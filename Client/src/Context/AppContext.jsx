@@ -3,6 +3,7 @@ import axios from 'axios'
 export const AppContext = createContext();
 
 export function AppContextProvider({children}) {
+    const [username , setUsername] = useState("Hilal")
     const [ fetchData , setFetchData ] = useState('')
     const [ loading , setLoading ] = useState(true)
     const FetchApiData = async () => {
@@ -21,6 +22,8 @@ export function AppContextProvider({children}) {
         FetchApiData();
       }, [])
     const stateValueOfData = {
+        username,
+        setUsername,
         loading,
         setLoading,
         fetchData,

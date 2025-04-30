@@ -2,15 +2,17 @@ import React from 'react'
 import './Button.css'
 import { useNavigate } from 'react-router-dom'
 import home_image from '../assets/home_image.webp'
-
+import { useContext } from 'react'
+import AppContext from '../Context/AppContext'
 function Header() {
 const navigate = useNavigate('')
-
+    const {username , setUsername} = useContext(AppContext);
+    console.log(username)
   return (
     <div>
         <div className='flex justify-between py-6 px-10'>
             <div>
-                <img className='w-16' src="https://cdn-icons-png.freepik.com/256/7733/7733518.png?ga=GA1.1.1304505363.1745871602" alt="" />
+                <img className='w-16' src="https://cdn-icons-png.freepik.com/256/7733/7733518.png?ga=GA1.1.1304505363.1745871602" alt="" />{username}
             </div>
             <div>
                 <button className="cssbuttons-io px-14 py-3 text-white"
