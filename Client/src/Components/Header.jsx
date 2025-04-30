@@ -6,7 +6,8 @@ import { useContext } from 'react'
 import AppContext from '../Context/AppContext'
 function Header() {
     const navigate = useNavigate('')
-    const { userData , isLoggedin} = useContext(AppContext)
+    const { userData , isUserVarified , setUserData , VITE_BACKEND_URL , isLoggedin , setIsLoggedin} = useContext(AppContext)
+    console.log(isUserVarified)
   return (
     <div>
         <div className='flex justify-between py-6 px-10'>
@@ -15,7 +16,7 @@ function Header() {
             </div>
             <div className='relative'>
                 {
-                    (!isLoggedin) ? (
+                    (!userData) ? (
                         <button className="cssbuttons-io px-14 py-3 text-white"
                             onClick={() => { navigate('/login')}}>
                                 Login
@@ -23,10 +24,8 @@ function Header() {
                     ) : (
                         <div className='rounded-full bg-white px-3 py-2 text-indigo-700 poppins-extrabold flex justify-center items-center cursor-pointer group'>
                             <p>{userData[0]}</p>
-
-
                             <div className='p-5 hidden text-sm w-[120px] absolute top-[36px] left-[-28px] my-2 group-hover:block space-y-0 poppins-bold px-0 py-0 bg-slate-100 rounded-xl text-black'>
-                                <h1 className='text-center cursor-pointer py-2 hover:bg-slate-300'>Varify Email</h1>
+                                { !isUserVarified && <h1 className='text-center cursor-pointer py-2 hover:bg-slate-300'>Varify Email</h1>}
                                 <h1 className='text-center cursor-pointer py-2 hover:bg-slate-300'>Logout</h1>
                             </div>
                         </div>
