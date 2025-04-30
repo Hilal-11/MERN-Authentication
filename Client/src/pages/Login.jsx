@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
 import AppContext from '../Context/AppContext';
-
+import axios from 'axios';
+import { toast } from 'react-toastify'
 function Login() {
 
   const { BACKEND_URL , setIsLoggedin} = useContext(AppContext)
@@ -13,14 +14,31 @@ function Login() {
   const [email , setEmail] = useState('')
   const [password , setPassword] = useState('')
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
+   try{
     event.preventDefault();
+    axios.defaults.withCredentials = true
+    if(state === 'Sign Up') {
+      const { data } = await axios.post(BACKEND_URL + '/api/auth/regester', { name , email , password})
+      if(data.success) {
+        setIsLoggedin(true)
+        navigate('/')
+      }else{
+        toast.error(data.message)
+      }
+    }
+
+   }catch(error) {
+    toast.error(error.message)
+   }
     const user = {
       username,
       email,
       password
     }
-    console.log(user)
+
+
+
 
     // Clear the form after submitting
     setUsername('')
