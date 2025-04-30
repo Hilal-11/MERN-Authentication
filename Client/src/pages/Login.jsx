@@ -41,6 +41,7 @@ function Login() {
                   className="w-full outline-none text-gray-700"
                   onChange={(e) => setUsername(e.target.value)}
                   value={username}
+                  required
                 />
               </div>
             </div>
@@ -56,6 +57,7 @@ function Login() {
                 className="w-full outline-none text-gray-700"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
+                required
               />
             </div>
           </div>
@@ -70,6 +72,7 @@ function Login() {
                 className="w-full outline-none text-gray-700"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
+                required
               />
             </div>
           </div>
