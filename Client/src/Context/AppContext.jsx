@@ -1,31 +1,32 @@
 import { createContext , useState , useEffect } from 'react'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 export const AppContext = createContext();
 
 export function AppContextProvider({children}) {
 
     const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     const [isLoggedin , setIsLoggedin] = useState(false)
-    const [userdata , setUserdata] = useState(false)
-    const [username , setUsername] = useState('');
+    const [userData , setUserData] = useState('')
     
 
-    const fetchUserData = async () => {
-        const response = await axios(VITE_BACKEND_URL + "/api/user/getUserData")
-        console.log(response)
-        setUsername(response.user)
-        
+    const getUserData = async () => {
+       try{
+        const {data} = await axios(VITE_BACKEND_URL + "/api/user/getUserData")
+        data.success ? setUserData(data.userData.name) : toast.error(data.message)
+       }catch(error){
+            toast.error(error.message)
+       }
     }
 
-    useEffect(() =>{
-        fetchUserData()
-    },[])
-
+    // useEffect(() => {
+    //     getUserData()
+    // }, [])
     const stateValueOfData = {
         VITE_BACKEND_URL,
         isLoggedin, setIsLoggedin,
-        userdata, setUserdata,
-        username , 
+        userData,
+        getUserData , 
     }
 
     
