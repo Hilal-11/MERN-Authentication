@@ -1,21 +1,25 @@
-import { createContext , useState } from 'react'
+import { createContext , useState , useEffect } from 'react'
 import axios from 'axios'
 export const AppContext = createContext();
 
-export function AppContextProvider() {
+export function AppContextProvider({children}) {
     const [ fetchData , setFetchData ] = useState('')
     const [ loading , setLoading ] = useState(true)
     const FetchApiData = async () => {
         try{
             setLoading(true)
-            const result = await axios('https://api.sampleapis.com/movies/action-adventure');
-            const response = await result.data;
-            setFetchData(response)
+            const result = await axios('https://api.sampleapis.com/playstation/games');
+            // const response = await result.json()
+            setFetchData(result.data)
             setLoading(false)
         }catch(error){ 
             console.log(error.message)
         }
     }
+
+    useEffect(() => {
+        FetchApiData();
+      }, [])
     const stateValueOfData = {
         loading,
         setLoading,
@@ -24,7 +28,7 @@ export function AppContextProvider() {
         FetchApiData,
     }
 return <AppContext.Provider value={ stateValueOfData }>
-    { props.children }
+    {children}
 </AppContext.Provider>
 
 }
