@@ -3,33 +3,19 @@ import axios from 'axios'
 export const AppContext = createContext();
 
 export function AppContextProvider({children}) {
-    const [username , setUsername] = useState("Hilal")
-    const [ fetchData , setFetchData ] = useState('')
-    const [ loading , setLoading ] = useState(true)
-    const FetchApiData = async () => {
-        try{
-            setLoading(true)
-            const result = await axios('https://api.sampleapis.com/playstation/games');
-            // const response = await result.json()
-            setFetchData(result.data)
-            setLoading(false)
-        }catch(error){ 
-            console.log(error.message)
-        }
+
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    const [isLoggedin , setIsLoggedin] = useState(false)
+    const [userdata , setUserdata] = useState(false)
+
+    
+    const stateValueOfData = {
+        BACKEND_URL,
+        isLoggedin, setIsLoggedin,
+        userdata, setUserdata
     }
 
-    useEffect(() => {
-        FetchApiData();
-      }, [])
-    const stateValueOfData = {
-        username,
-        setUsername,
-        loading,
-        setLoading,
-        fetchData,
-        setFetchData,
-        FetchApiData,
-    }
+    
 return <AppContext.Provider value={ stateValueOfData }>
     {children}
 </AppContext.Provider>

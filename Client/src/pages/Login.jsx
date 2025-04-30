@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react';
-function Login() {
-  const [state , setState] = useState('Sign Up')
+import AppContext from '../Context/AppContext';
 
+function Login() {
+
+  const { BACKEND_URL , setIsLoggedin} = useContext(AppContext)
+
+  const [state , setState] = useState('Sign Up')
+  const navigate = useNavigate('')
   const [username , setUsername] = useState('')
   const [email , setEmail] = useState('')
   const [password , setPassword] = useState('')
@@ -76,6 +81,9 @@ function Login() {
               />
             </div>
           </div>
+
+
+          <p onClick={() => navigate('/resetPassword')} className='mb-4 text-indigo-500 cursor-pointer'>Forgot Password</p>
 
           {/* Sign Up Button */}
           <button
