@@ -247,8 +247,6 @@ export const varifyEmail = async (req , res) => {
 // CHECK USER IS AUTHENTICATED OR NOT
 export const isAuthenticated = async (req , res) => {
     try{
-        
-
         return res.json({ success: true})
     }catch(error) {
         res.json({
