@@ -4,10 +4,26 @@ import { useNavigate } from 'react-router-dom'
 import home_image from '../assets/home_image.webp'
 import { useContext } from 'react'
 import AppContext from '../Context/AppContext'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 function Header() {
     const navigate = useNavigate('')
     const { userData , isUserVarified , setUserData , VITE_BACKEND_URL , isLoggedin , setIsLoggedin} = useContext(AppContext)
-    console.log(isUserVarified)
+
+
+    const logout = async () => {
+        try{
+            axios.defaults.withCredentials = true;
+            const { data } = await axios.post(VITE_BACKEND_URL + '/api/auth/logout');
+            data.success && setIsLoggedin(false);
+            data.success && setUserData(false);
+            navigate('/')
+
+        }catch(error) {
+            toast.error(error.message)
+        }
+    }
+
   return (
     <div>
         <div className='flex justify-between py-6 px-10'>
@@ -26,7 +42,7 @@ function Header() {
                             <p>{userData[0]}</p>
                             <div className='p-5 hidden text-sm w-[120px] absolute top-[36px] left-[-28px] my-2 group-hover:block space-y-0 poppins-bold px-0 py-0 bg-slate-100 rounded-xl text-black'>
                                 { !isUserVarified && <h1 className='text-center cursor-pointer py-2 hover:bg-slate-300'>Varify Email</h1>}
-                                <h1 className='text-center cursor-pointer py-2 hover:bg-slate-300'>Logout</h1>
+                                <h1 onClick={logout} className='text-center cursor-pointer py-2 hover:bg-slate-300'>Logout</h1>
                             </div>
                         </div>
                     )

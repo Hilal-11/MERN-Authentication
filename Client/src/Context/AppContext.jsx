@@ -5,9 +5,11 @@ export const AppContext = createContext();
 
 export function AppContextProvider({children}) {
 
+    axios.defaults.withCredentials = true
+
     const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     const [isLoggedin , setIsLoggedin] = useState(false)
-    const [userData , setUserData] = useState('')
+    const [userData , setUserData] = useState(false)
     const [isUserVarified , setIsUserVarified] = useState('')
 
     
