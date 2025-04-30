@@ -1,11 +1,11 @@
 
 import express from 'express';
 const app = express();
-import cors from 'cors'
 import authRouter from './routes/authRoutes.js'
 import userRouter from './routes/userRoutes.js';
 import connectDB from './config/database.js'
 import cookieParser from 'cookie-parser';
+import cors from 'cors'
 import dotenv from 'dotenv'
 dotenv.config()
 const PORT = process.env.PORT;
@@ -17,6 +17,8 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Parses URL-encoded bodies
 app.use(cookieParser())
+const allowedOrigin = ['http://localhost:5173']
+app.use(cors({ origin: allowedOrigin , credentials: true}))
 app.use('/api/auth' , authRouter);
 app.use('/api/user' , userRouter);
 
