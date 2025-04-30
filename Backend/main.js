@@ -10,10 +10,6 @@ import dotenv from 'dotenv'
 dotenv.config()
 const PORT = process.env.PORT;
 
-
-app.use(cors({
-    credentials: true
-}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Parses URL-encoded bodies
 app.use(cookieParser())

@@ -10,15 +10,16 @@ const getUserData = async ( req , res ) => {
             }) 
         }
         return res.json({
-            success: true,
             userData: {
                 name: user.username,
                 isAccountVarified: user.isAccountVarified
-            }
+            },
+            success: true,
+
         })
     }catch(error) {
         return res.json( {
-            success: true,
+            success: false,
             message: error.message
         })
     }
