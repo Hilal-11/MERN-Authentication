@@ -1,9 +1,9 @@
 import React from 'react'
 import { useContext , useEffect } from 'react'
-import { AppContext } from '../Context/AppContext'
+import AppContext, { AppContextProvider } from '../Context/AppContext'
 import Header from '../Components/Header'
-function Home(props) {
-  const { loading, setLoading, fetchData, setFetchData, FetchApiData } = useContext(AppContext);
+function Home() {
+  const { loading , setLoading , fetchData, setFetchData, FetchApiData } = useContext(AppContext);
   console.log(loading)
   useEffect(() => {
     FetchApiData();

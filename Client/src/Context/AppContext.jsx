@@ -2,7 +2,7 @@ import { createContext , useState } from 'react'
 import axios from 'axios'
 export const AppContext = createContext();
 
-export function AppContextProvider({ children }) {
+export function AppContextProvider() {
     const [ fetchData , setFetchData ] = useState('')
     const [ loading , setLoading ] = useState(true)
     const FetchApiData = async () => {
@@ -13,8 +13,6 @@ export function AppContextProvider({ children }) {
             setFetchData(response)
             setLoading(false)
         }catch(error){ 
-            setFetchData('')
-            setLoading(true)
             console.log(error.message)
         }
     }
@@ -26,7 +24,9 @@ export function AppContextProvider({ children }) {
         FetchApiData,
     }
 return <AppContext.Provider value={ stateValueOfData }>
-    { children }
+    { props.children }
 </AppContext.Provider>
 
 }
+
+export default AppContext
