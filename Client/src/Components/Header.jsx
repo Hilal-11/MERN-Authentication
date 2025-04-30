@@ -5,8 +5,9 @@ import home_image from '../assets/home_image.webp'
 import { useContext } from 'react'
 import AppContext from '../Context/AppContext'
 function Header() {
-const navigate = useNavigate('')
-    
+    const navigate = useNavigate('')
+    const { username , isLoggedin } = useContext(AppContext)
+
   return (
     <div>
         <div className='flex justify-between py-6 px-10'>
@@ -14,10 +15,19 @@ const navigate = useNavigate('')
                 <img className='w-16' src="https://cdn-icons-png.freepik.com/256/7733/7733518.png?ga=GA1.1.1304505363.1745871602" alt="" />
             </div>
             <div>
-                <button className="cssbuttons-io px-14 py-3 text-white"
-                onClick={() => { navigate('/login')}}>
-                    Login
-                </button>
+                {
+                    (!isLoggedin) ? (
+                        <button className="cssbuttons-io px-14 py-3 text-white"
+                            onClick={() => { navigate('/login')}}>
+                                Login
+                        </button>
+                    ) : (
+                        <div>
+                            <p>{username[0]}</p>
+                        </div>
+                    )
+                }
+                
             </div>
             </div>
             {/* BODY MAIN CONTENT */}

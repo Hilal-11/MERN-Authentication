@@ -4,15 +4,28 @@ export const AppContext = createContext();
 
 export function AppContextProvider({children}) {
 
-    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    const VITE_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
     const [isLoggedin , setIsLoggedin] = useState(false)
     const [userdata , setUserdata] = useState(false)
-
+    const [username , setUsername] = useState('');
     
+
+    const fetchUserData = async () => {
+        const response = await axios(VITE_BACKEND_URL + "/api/user/getUserData")
+        console.log(response)
+        setUsername(response.user)
+        
+    }
+
+    useEffect(() =>{
+        fetchUserData()
+    },[])
+
     const stateValueOfData = {
-        BACKEND_URL,
+        VITE_BACKEND_URL,
         isLoggedin, setIsLoggedin,
-        userdata, setUserdata
+        userdata, setUserdata,
+        username , 
     }
 
     
