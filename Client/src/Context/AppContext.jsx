@@ -44,7 +44,8 @@ export function AppContextProvider({children}) {
         VITE_BACKEND_URL,
         isLoggedin, setIsLoggedin,
         userData, setUserData ,
-        getUserData , isUserVarified
+        getUserData , 
+        isUserVarified , setIsUserVarified
     }
 
     

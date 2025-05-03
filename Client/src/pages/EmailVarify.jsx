@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
-
+import { useContext } from 'react';
+import AppContext from '../Context/AppContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 function EmailVarify() {
+
+  axios.defaults.withCredentials = true;
+
+  const navigate = useNavigate('')
+  const { VITE_BACKEND_URL , isLoggedin , userData , getUserData , isUserVarified , setIsUserVarified } = useContext(AppContext)
+  const inputRef = React.useRef([])
   const [otp, setOtp] = useState(new Array(6).fill(""));
+
+  
 
   const handleChange = (element, index) => {
     if (isNaN(element.value)) return;
@@ -15,11 +27,35 @@ function EmailVarify() {
       element.nextSibling.focus();
     }
   };
+  // const handleKeyDown = (e, index) => {
+  //   if(e.key === 'Backspace' && e.key === '' && index > 0) {
+  //     inputRef.current[index-1].focus();
+  //   }
+  // }
 
-  const handleSubmit = () => {
-    const convertString = otp.toString()
-    const OTP = convertString.split(',').join('')
-    console.log(OTP)
+  const handleSubmit = async (event) => {
+    try{
+      event.preventDefault();
+      const convertString = otp.toString()
+      const OTP = convertString.split(',').join('')
+      
+      const {data} = await axios.post(VITE_BACKEND_URL + 'api/auth/varify-account' , { OTP });
+      if(data.success) {
+        toast.success(data.message)
+        getUserData();
+        navigate('/')
+      }else{
+        toast.error(data.message)
+      }
+    }catch(error) {
+      toast.error(error.message)
+    }
+
+
+
+
+
+
 
     setOtp(new Array(6).fill(""))
   };
@@ -40,6 +76,7 @@ function EmailVarify() {
               maxLength="1"
               value={data}
               onChange={(e) => handleChange(e.target, index)}
+              // onKeyDown={(e) => handleKeyDown(e , index)}
               className=" text-black shadow-md shadow-gray-800 w-12 h-12 text-center text-xl rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           ))}
