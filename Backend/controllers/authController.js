@@ -183,7 +183,7 @@ export const sendVarifyOtp = async (req , res) => {
             .then(info => {
                 console.log("OTP Sent on email successfully" , info)
             }).catch(err => {
-                console.log("Faied to sent the OTP" , info)
+                console.log("Faied to sent the OTP" , err)
             })
 
         res.json({
