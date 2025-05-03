@@ -52,11 +52,6 @@ function EmailVarify() {
     }
 
 
-
-
-
-
-
     setOtp(new Array(6).fill(""))
   };
 
