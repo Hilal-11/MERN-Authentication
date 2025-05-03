@@ -10,7 +10,7 @@ function Header() {
     const navigate = useNavigate('')
     const { userData , isUserVarified , setUserData , VITE_BACKEND_URL , isLoggedin , setIsLoggedin} = useContext(AppContext)
 
-
+    console.log(VITE_BACKEND_URL + '/api/auth/send-varify-otp')
     const logout = async () => {
         try{
             axios.defaults.withCredentials = true;
@@ -27,15 +27,16 @@ function Header() {
     const sendVarificationOTP = async () => {
         try{
             axios.defaults.withCredentials = true;
-            const {data} = await axios.post(VITE_BACKEND_URL , "/api/auth/send-varify-otp")
+            const {data} = await axios.post(VITE_BACKEND_URL + '/api/auth/send-varify-otp')
+            console.log(data)
             if(data.success) {
-                navigate('/emailVarify')
                 toast.success(data.message)
+                navigate('/emailVarify')
             }else{
                 toast.error(data.message)
             }
         }catch(error) {
-            toast.error(data.message)
+            toast.error(error.message)
         }
     }
 
@@ -55,8 +56,8 @@ function Header() {
                     ) : (
                         <div className='rounded-full bg-white px-3 py-2 text-indigo-700 poppins-extrabold flex justify-center items-center cursor-pointer group'>
                             <p>{userData[0]}</p>
-                            <div className='p-5 hidden text-sm w-[120px] absolute top-[36px] left-[-28px] my-2 group-hover:block space-y-0 poppins-bold px-0 py-0 bg-slate-100 rounded-xl text-black'>
-                                { !isUserVarified && <h1 onClick={alert("Hii")} className='text-center cursor-pointer py-2 hover:bg-slate-300'>Varify Email</h1>}
+                            <div className='p-5 hidden text-sm w-[120px] absolute top-[34px] left-[-28px] my-2 group-hover:block space-y-0 poppins-bold px-0 py-0 bg-slate-100 rounded-xl text-black'>
+                                { !isUserVarified && <h1 onClick={sendVarificationOTP} className='text-center cursor-pointer py-2 hover:bg-slate-300'>Varify Email</h1>}
                                 <h1 onClick={logout} className='text-center cursor-pointer py-2 hover:bg-slate-300'>Logout</h1>
                             </div>
                         </div>
