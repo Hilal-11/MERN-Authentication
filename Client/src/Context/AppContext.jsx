@@ -19,6 +19,7 @@ export function AppContextProvider({children}) {
         if(data.success) {
             setIsLoggedin(true);
             getUserData();
+            
         }
         }catch(error){
             toast.error(error.message)
