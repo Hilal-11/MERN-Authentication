@@ -58,7 +58,6 @@ export const regester = async (req , res) => {
             text: `welcome to webmastery.pro your account has created with email id: ${email}`, // plain text body
             html: "<b>Hello there i am hiala , founder of <h2>Webmastery.pro</h2></b>", // html body
         }
-
         await transporter.sendMail(mail)
             .then(info => {
                 console.log("Mail sent successfully", info)
